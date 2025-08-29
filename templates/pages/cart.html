@@ -1,0 +1,394 @@
+    {{ define "cart" }}
+    <section class="breadcrumb-section pb-3 pt-3">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Shopping Cart</li>
+            </ol>
+        </div>
+    </section>
+    <section class="product-page pb-4 pt-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="section-title">
+                        <h2>Shopping Cart</h2>
+                    </div>
+                </div>
+            </div>
+            {{ if .success }}
+            <div class="alert alert-success">
+                {{ range $i, $msg := .success }}
+                {{ $msg }}<br/>
+                {{ end }}
+            </div>
+            {{ end }}
+            {{ if .error }}
+            <div class="alert alert-danger">
+                {{ range $i, $msg := .error }}
+                {{ $msg }}<br/>
+                {{ end }}
+            </div>
+            {{ end }}
+            <div class="table-responsive mt-5">
+                <form method="POST" action="/carts/update">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Image</th>
+                            <th>Product</th>
+                            <th>Satuan</th>
+                            <th>Price</th>
+                            <th width="10%">Quantity</th>
+                            <th>Subtotal</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{ range $i, $item := .items }}
+                        <tr>
+                            <td scope="row"><a href="/carts/remove/{{ $item.ID }}"><i class="fa fa-times"></i></a></td>
+                            <!-- Enhanced image display with better error handling and debugging -->
+                            <td>
+                                {{ if $item.Product.ProductImages }}
+                                    {{ $image := index $item.Product.ProductImages 0 }}
+                                    <img src="/public/{{ $image.Path }}" class="img-fluid" 
+                                        style="width: 60px; height: 70px; object-fit: cover; border-radius: 8px;" 
+                                        alt="{{ $item.Product.Name }}"
+                                        onerror="console.log('Image failed to load:', this.src); this.src='https://placehold.jp/60x70.png?text=No+Image'" />
+                                {{ else }}
+                                    <!-- Added debug info to help identify the issue -->
+                                    <img src="https://placehold.jp/60x70.png?text=No+Image" class="img-fluid" 
+                                        style="width: 60px; height: 70px; object-fit: cover; border-radius: 8px;" 
+                                        alt="No image available"
+                                        title="Debug: Product ID {{ $item.Product.ID }} has no images" />
+                                    <!-- Debug comment: Product {{ $item.Product.Name }} (ID: {{ $item.Product.ID }}) has no ProductImages -->
+                                {{ end }}
+                            </td>
+                            <td>{{ $item.Product.Name }}</td>
+                            <td><span class="badge-primary">{{ $item.Unit }}</span></td>
+                            <td>{{ $item.BasePrice }}</td>
+                            <td><input type="number" min="1" name="{{ $item.ID }}" class="form-control"
+                                    value="{{ $item.Qty }}"/></td>
+                            <td>{{ $item.BaseTotal }}</td>
+                        </tr>
+                        {{ end }}
+                        {{ if .items }}
+                        <tr>
+                            <td colspan="7">
+                                <button type="submit" class="btn btn-primary pull-right">Update Cart</button>
+                            </td>
+                        </tr>
+                        {{ else }}
+                        <tr>
+                            <td colspan="7">
+                                The cart is empty.
+                            </td>
+                        </tr>
+                        {{ end }}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div class="row">
+                <div class="col-6">&nbsp;</div>
+                <div class="col-6">
+                    <h4>Cart Totals</h4>
+                    <div class="table-responsive">
+                        <form method="POST" id="calculate-shipping" action="/orders/checkout">
+                            <table class="table table-striped">
+                                <tr>
+                                    <th>Sub Total</th>
+                                    <td>{{ .cart.BaseTotalPrice }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Tax ({{ .cart.TaxPercent }}%)</th>
+                                    <td>{{ .cart.TaxAmount }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Shipping</th>
+                                    <td>
+                                        <!-- Hidden field untuk province_id, required oleh checkout -->
+                                        <input type="hidden" name="province_id" value="64" />
+                                        <input id="cour_type" type="hidden" name="cour_type" class="form-control" value=""
+                                                />
+                                        <input id="latitude" type="hidden" name="latitude" class="form-control" value=""
+                                                />
+                                        <input id="longitude" type="hidden" name="longitude" class="form-control" value=""
+                                                />
+                                        <div class="form-group">
+                                            <label for="courier" class="form-label text-danger">Pilih Kurir: <span class="text-danger">*</span></label>
+                                            <select id="courier"  name="courier" class="form-control courier" required>
+                                                <option value="" selected>-- Pilih Kurir --</option>
+                                                <option value="jne">JNE</option>
+                                                <option value="gojek">GOJEK</option>
+                                                <option value="grab">GRAB</option>
+                                                <option value="pickup">Pick up in Store</option>
+                                            </select>
+                                            <small class="text-muted">Wajib memilih kurir sebelum checkout</small>
+                                        </div>
+                                        <!-- <div class="form-group">
+                                            <select name="province_id" class="form-control province_id">
+                                                <option value="" selected>-- Pilih Provinsi --</option>
+                                                {{ range $keyProvince, $province := .provinces }}
+                                                <option value="{{ $province.ID }}">{{ $province.Name }}</option>
+                                                {{ end }}
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <select name="city_id" class="form-control city_id"></select>
+                                        </div> -->
+                                        <div class="form-group" id="shipping_fee_options">
+                                            <select name="shipping_fee" class="form-control shipping_fee_options">
+                                            </select>
+                                        </div>
+                                        <div id="map-container" style="display: none;">
+                                            <div id="map" style="height: 400px; width: 100%; margin-bottom: 15px;"></div>
+                                            <div class="form-group">
+                                                <button type="button" class="btn btn-primary" id="confirm-location">Gunakan Lokasi</button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Total</th>
+                                    <td><strong><span id="grand-total">{{ .cart.GrandTotal }}</span></strong></td>
+                                </tr>
+                                <tr>
+                                    <th>Detail Pengiriman</th>
+                                    <td>
+                                        <div class="form-group">
+                                            <label for="first_name" class="form-label">Nama Depan <span class="text-danger">*</span></label>
+                                            <input id="first_name" type="text" name="first_name" class="form-control" value=""
+                                                placeholder="First name" required/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="last_name" class="form-label">Nama Belakang <span class="text-danger">*</span></label>
+                                            <input id="last_name" type="text" name="last_name" class="form-control" value=""
+                                                placeholder="Last name" required/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="address1" class="form-label">Alamat Lengkap <span class="text-danger">*</span></label>
+                                            <input id="address1" type="text" name="address1" class="form-control" value=""
+                                                placeholder="Ketik alamat lengkap (akan muncul saran dari Google Maps)" 
+                                                autocomplete="off" required/>
+                                            <div id="address-suggestions" class="list-group position-absolute" style="z-index: 1000; max-height: 200px; overflow-y: auto; display: none; width: 100%;"></div>
+                                        </div>
+                                        <div class="form-group">
+                                            <input id="address2" type="text" name="address2" class="form-control" value=""
+                                                placeholder="Patokan/landmark (opsional)" />
+                                        </div>
+                                        <div class="form-group">
+                                            <input id="post_code" type="text" name="post_code" class="form-control" value=""
+                                                placeholder="Kode pos (opsional)" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                                            <input id="email" type="email" name="email" class="form-control" value=""
+                                                placeholder="Email untuk konfirmasi" required />
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="phone" class="form-label">Nomor Telepon <span class="text-danger">*</span></label>
+                                            <input id="phone" type="tel" name="phone" class="form-control" value=""
+                                                placeholder="Masukkan nomor telepon" 
+                                                pattern="^(\+62|62|0)8[1-9]{1}[0-9]{7,11}$" 
+                                                title="Format nomor telepon Indonesia yang benar: +6281234567890" required />
+                                        </div>
+                                        <!-- <div class="form-group">
+                                            <div id="map" style="height: 400px; width: 100%; margin-bottom: 15px;"></div>
+                                            <input type="hidden" id="latitude" name="latitude">
+                                            <input type="hidden" id="longitude" name="longitude">
+                                        </div> -->
+                                        <!-- <div class="form-group">
+                                            <button type="button" class="btn btn-primary" id="confirm-location">Gunakan Lokasi</button>
+                                        </div> -->
+                                    </td>
+                                </tr>
+                                <!-- <tr>
+                                    <th>Detail Pengiriman</th>
+                                    <td>
+                                        <div class="form-group">
+                                            <input type="text" name="first_name" class="form-control" value=""
+                                                placeholder="First name"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" name="last_name" class="form-control" value=""
+                                                placeholder="Last name"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" name="address1" class="form-control" value=""
+                                                placeholder="Address 1"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" name="address2" class="form-control" value=""
+                                                placeholder="Address 2"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" name="post_code" class="form-control" value=""
+                                                placeholder="Post Code"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" name="phone" class="form-control" value=""
+                                                placeholder="Phone"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" name="email" class="form-control" value=""
+                                                placeholder="Email"/>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" id="exampleCheck1"
+                                                name="save_address">
+                                            <label class="form-check-label" for="exampleCheck1">Simpan alamat untuk
+                                                pemesanan selanjutnya?</label>
+                                        </div>
+                                    </td>
+                                </tr> -->
+                                <tr>
+                                    <th>&nbsp;</th>
+                                    <td>
+                                        <button type="submit" class="btn btn-success pull-right" id="checkout-btn">Go to Checkout</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+    // Address Autocomplete menggunakan Nominatim OpenStreetMap (gratis)
+    document.addEventListener('DOMContentLoaded', function() {
+        const addressInput = document.getElementById('address1');
+        const suggestionsDiv = document.getElementById('address-suggestions');
+        let debounceTimeout;
+
+        addressInput.addEventListener('input', function() {
+            const query = this.value.trim();
+            
+            // Clear previous timeout
+            clearTimeout(debounceTimeout);
+            
+            if (query.length < 3) {
+                suggestionsDiv.style.display = 'none';
+                return;
+            }
+
+            // Debounce untuk mengurangi API calls
+            debounceTimeout = setTimeout(() => {
+                searchAddress(query);
+            }, 300);
+        });
+
+        function searchAddress(query) {
+            // Menggunakan Nominatim API (gratis) untuk geocoding
+            const url = `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&q=${encodeURIComponent(query)}, Indonesia`;
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    displaySuggestions(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching address suggestions:', error);
+                    suggestionsDiv.style.display = 'none';
+                });
+        }
+
+        function displaySuggestions(suggestions) {
+            suggestionsDiv.innerHTML = '';
+            
+            if (suggestions.length === 0) {
+                suggestionsDiv.style.display = 'none';
+                return;
+            }
+
+            suggestions.forEach(suggestion => {
+                const item = document.createElement('a');
+                item.className = 'list-group-item list-group-item-action';
+                item.style.cursor = 'pointer';
+                item.innerHTML = `
+                    <div>
+                        <strong>${suggestion.display_name}</strong>
+                    </div>
+                    <small class="text-muted">Lat: ${suggestion.lat}, Lon: ${suggestion.lon}</small>
+                `;
+                
+                item.addEventListener('click', function() {
+                    addressInput.value = suggestion.display_name;
+                    
+                    // Set coordinates untuk instant delivery
+                    document.getElementById('latitude').value = suggestion.lat;
+                    document.getElementById('longitude').value = suggestion.lon;
+                    
+                    suggestionsDiv.style.display = 'none';
+                });
+                
+                suggestionsDiv.appendChild(item);
+            });
+            
+            suggestionsDiv.style.display = 'block';
+        }
+
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!addressInput.contains(e.target) && !suggestionsDiv.contains(e.target)) {
+                suggestionsDiv.style.display = 'none';
+            }
+        });
+
+        // Form validation untuk checkout
+        const checkoutForm = document.getElementById('calculate-shipping');
+        if (!checkoutForm) {
+            console.error('Form calculate-shipping tidak ditemukan!');
+            return;
+        }
+        
+        checkoutForm.addEventListener('submit', function(e) {
+            console.log('Form submit triggered');
+            const firstName = document.getElementById('first_name').value.trim();
+            const lastName = document.getElementById('last_name').value.trim();
+            const address1 = document.getElementById('address1').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const courier = document.getElementById('courier').value.trim();
+            const shippingFee = document.querySelector('.shipping_fee_options').value.trim();
+            
+            // Validasi field wajib
+            if (!firstName || !lastName || !address1 || !email || !phone) {
+                e.preventDefault();
+                alert('Mohon lengkapi semua field yang diperlukan:\n- Nama depan\n- Nama belakang\n- Alamat\n- Email\n- Telepon');
+                return false;
+            }
+            
+            // Validasi email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                e.preventDefault();
+                alert('Format email tidak valid');
+                return false;
+            }
+            
+            // Validasi courier dipilih
+            const courierElement = document.getElementById('courier');
+            if (!courierElement || !courierElement.value || courierElement.value === '') {
+                e.preventDefault();
+                alert('Mohon pilih kurir pengiriman terlebih dahulu');
+                return false;
+            }
+            
+            // Validasi shipping fee dipilih (kecuali pickup)
+            const shippingFeeElement = document.querySelector('.shipping_fee_options');
+            if (courierElement.value !== 'pickup' && (!shippingFeeElement || !shippingFeeElement.value || shippingFeeElement.value === '')) {
+                e.preventDefault();
+                alert('Mohon pilih paket pengiriman terlebih dahulu.\n\nCara memilih:\n1. Pilih kurir dulu\n2. Tunggu muncul pilihan paket\n3. Pilih paket yang diinginkan');
+                return false;
+            }
+            
+            return true;
+        });
+    });
+    </script>
+
+    {{ end }}

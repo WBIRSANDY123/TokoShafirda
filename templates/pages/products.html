@@ -1,0 +1,314 @@
+{{ define "products" }}
+<section class="breadcrumb-section pb-3 pt-3" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-bottom: 1px solid #dee2e6;">
+    <div class="container">
+        <ol class="breadcrumb mb-0" style="background: transparent; padding: 0;">
+            <li class="breadcrumb-item">
+                <a href="/" style="color: #007bff; text-decoration: none; font-weight: 500;">
+                    <i class="fa fa-home mr-1"></i>Beranda
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page" style="color: #6c757d; font-weight: 600;">
+                Produk
+            </li>
+        </ol>
+    </div>
+</section>
+
+<section class="products-grid pb-5 pt-4" style="background: #f8f9fa;">
+<div class="container">
+    <div class="row">
+
+        <!-- Sidebar Kategori jadi Dropdown -->
+<div class="col-lg-3 col-md-4 col-12">
+    <div class="card mb-4" style="border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+        <div class="card-header bg-primary text-white" style="font-weight: 600; border-radius: 10px 10px 0 0;">
+            <i class="fa fa-list mr-2"></i> Kategori Produk
+        </div>
+        <div class="card-body">
+            <select class="form-control" id="category-dropdown" onchange="window.location.href=this.value">
+                <option value="/products" {{ if eq .selectedquery "" }}selected{{ end }}>Semua Kategori</option>
+                <option value="/products?query=Anti Nyamuk" {{ if eq .selectedquery "Anti Nyamuk" }}selected{{ end }}>Anti Nyamuk</option>
+                <option value="/products?query=ATK" {{ if eq .selectedquery "ATK" }}selected{{ end }}>ATK</option>
+                <option value="/products?query=Bahan" {{ if eq .selectedquery "Bahan" }}selected{{ end }}>Bahan</option>
+                <option value="/products?query=Beras" {{ if eq .selectedquery "Beras" }}selected{{ end }}>Beras</option>
+                <option value="/products?query=Bumbu" {{ if eq .selectedquery "Bumbu" }}selected{{ end }}>Bumbu</option>
+                <option value="/products?query=Kecantikan" {{ if eq .selectedquery "Kecantikan" }}selected{{ end }}>Kecantikan</option>
+                <option value="/products?query=Kopi" {{ if eq .selectedquery "Kopi" }}selected{{ end }}>Kopi</option>
+                <option value="/products?query=Lain-lain" {{ if eq .selectedquery "Lain-lain" }}selected{{ end }}>Lain-lain</option>
+                <option value="/products?query=Makanan" {{ if eq .selectedquery "Makanan" }}selected{{ end }}>Makanan</option>
+                <option value="/products?query=Mie" {{ if eq .selectedquery "Mie" }}selected{{ end }}>Mie</option>
+                <option value="/products?query=Minuman" {{ if eq .selectedquery "Minuman" }}selected{{ end }}>Minuman</option>
+                <option value="/products?query=Minyak" {{ if eq .selectedquery "Minyak" }}selected{{ end }}>Minyak</option>
+                <option value="/products?query=Obat" {{ if eq .selectedquery "Obat" }}selected{{ end }}>Obat</option>
+                <option value="/products?query=Pasta Gigi" {{ if eq .selectedquery "Pasta Gigi" }}selected{{ end }}>Pasta Gigi</option>
+                <option value="/products?query=Pembalut" {{ if eq .selectedquery "Pembalut" }}selected{{ end }}>Pembalut</option>
+                <option value="/products?query=Permen" {{ if eq .selectedquery "Permen" }}selected{{ end }}>Permen</option>
+                <option value="/products?query=Pewangi" {{ if eq .selectedquery "Pewangi" }}selected{{ end }}>Pewangi</option>
+                <option value="/products?query=Rokok" {{ if eq .selectedquery "Rokok" }}selected{{ end }}>Rokok</option>
+                <option value="/products?query=Sabun Cuci" {{ if eq .selectedquery "Sabun Cuci" }}selected{{ end }}>Sabun Cuci</option>
+                <option value="/products?query=Sabun Mandi" {{ if eq .selectedquery "Sabun Mandi" }}selected{{ end }}>Sabun Mandi</option>
+                <option value="/products?query=Saos" {{ if eq .selectedquery "Saos" }}selected{{ end }}>Saos</option>
+                <option value="/products?query=Shampo" {{ if eq .selectedquery "Shampo" }}selected{{ end }}>Shampo</option>
+                <option value="/products?query=Sirup" {{ if eq .selectedquery "Sirup" }}selected{{ end }}>Sirup</option>
+                <option value="/products?query=Snack" {{ if eq .selectedquery "Snack" }}selected{{ end }}>Snack</option>
+                <option value="/products?query=Susu" {{ if eq .selectedquery "Susu" }}selected{{ end }}>Susu</option>
+                <option value="/products?query=Teh Kopi" {{ if eq .selectedquery "Teh Kopi" }}selected{{ end }}>Teh Kopi</option>
+                <option value="/products?query=Tepung" {{ if eq .selectedquery "Tepung" }}selected{{ end }}>Tepung</option>
+                <option value="/products?query=Tisu" {{ if eq .selectedquery "Tisu" }}selected{{ end }}>Tisu</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Added sorting options card -->
+</div>
+
+        <!-- Konten Produk -->
+        <div class="col-lg-9 col-md-8 col-12">
+            <div class="row">
+                <div class="col-12">
+                    <div class="products-top mb-4">
+                        <div class="products-top-inner">
+                            <div class="products-found">
+                                <!-- Added sort parameter to search form -->
+                                <form method="GET" action="/products" class="mb-3">
+                                    <input type="hidden" name="sort" value="{{ .sortBy }}" id="sort-input">
+                                    {{ if .selectedquery }}
+                                        <input type="hidden" name="category" value="{{ .selectedquery }}">
+                                    {{ end }}
+                                    <div class="input-group" style="max-width: 100%; width: 100%; min-width: 400px;">
+                                        <input type="text" name="query" class="form-control" 
+                                               placeholder="Cari produk berdasarkan nama atau satuan..." 
+                                               value="{{ .searchQuery }}" id="search-input" autocomplete="off"
+                                               style="border: 2px solid #007bff; border-right: none; padding: 15px 20px; font-size: 16px; background: white; flex: 1; min-width: 0; width: 100%; letter-spacing: -0.2px; height: 50px;">
+                                        <div class="input-group-append" style="flex-shrink: 0;">
+                                            <button class="btn btn-primary" type="submit" 
+                                                    style="border: 2px solid #007bff; border-left: none; padding: 15px 25px; background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); font-weight: 600; transition: all 0.3s ease; white-space: nowrap; height: 50px;">
+                                                <i class="fa fa-search mr-1"></i> CARI
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div id="search-suggestions" class="list-group position-absolute" 
+                                         style="top: 100%; z-index: 1000; max-height: 300px; overflow-y: auto; display: none; width: 100%; border-radius: 0 0 10px 10px; box-shadow: 0 8px 25px rgba(0,0,0,0.15);"></div>
+                                </form>
+
+                                <!-- Added current sorting display -->
+                            
+
+                                {{ if .searchQuery }}
+                                    <div class="search-info mb-4 p-3" style="background: white; border-radius: 10px; border-left: 4px solid #007bff; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                                        <small class="text-muted d-block mb-2">
+                                            <i class="fa fa-search mr-1"></i>
+                                            Hasil pencarian untuk: "<strong style="color: #007bff;">{{ .searchQuery }}</strong>"
+                                        </small>
+                                        <a href="/products?sort={{ .sortBy }}" class="btn btn-sm btn-outline-secondary" 
+                                           style="border-radius: 20px; padding: 5px 15px; font-weight: 500; transition: all 0.3s ease;">
+                                            <i class="fa fa-times mr-1"></i>Hapus Filter
+                                        </a>
+                                    </div>
+                                {{ end }}
+                            </div>               
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                {{ range $i, $product := .products }}
+                    <div class="col-lg-4 col-md-6 col-12 mb-4">
+                        <div class="single-product" style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.1); transition: all 0.3s ease; border: none;">
+                            <div class="product-img" style="position: relative; overflow: hidden;">
+                                {{ if gt $product.Stock 0 }}
+                                    <a href="/products/{{ $product.Slug }}" style="display: block;">
+                                        {{ if $product.ProductImages }}
+                                            {{ $image := index $product.ProductImages 0 }}
+                                            <img src="/public/{{ $image.Path }}" class="img-fluid" 
+                                                 style="width: 100%; height: 250px; object-fit: cover; transition: transform 0.3s ease;"
+                                                 onerror="this.src='https://placehold.jp/300x400.png?text=No+Image'" />
+                                        {{ else }}
+                                            <img src="https://placehold.jp/300x400.png?text=No+Image" class="img-fluid" 
+                                                 style="width: 100%; height: 250px; object-fit: cover; transition: transform 0.3s ease;" />
+                                        {{ end }}
+                                    </a>
+                                    <!-- Enhanced stock badge with quantity display -->
+                                    <div class="stock-badge" style="position: absolute; top: 10px; right: 10px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 8px 12px; border-radius: 15px; font-size: 12px; font-weight: 600; box-shadow: 0 2px 8px rgba(40,167,69,0.3);">
+                                        <i class="fa fa-check-circle mr-1"></i>Stok: {{ $product.Stock }}
+                                    </div>
+                                {{ else }}
+                                    {{ if $product.ProductImages }}
+                                        {{ $image := index $product.ProductImages 0 }}
+                                        <img src="/public/{{ $image.Path }}" class="img-fluid opacity-50" 
+                                             style="width: 100%; height: 250px; object-fit: cover;"
+                                             onerror="this.src='https://placehold.jp/300x400.png?text=No+Image'" />
+                                    {{ else }}
+                                        <img src="https://placehold.jp/300x400.png?text=No+Image" class="img-fluid opacity-50" 
+                                             style="width: 100%; height: 250px; object-fit: cover;" />
+                                    {{ end }}
+                                    <div class="stock-badge" style="position: absolute; top: 10px; right: 10px; background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); color: white; padding: 8px 12px; border-radius: 15px; font-size: 12px; font-weight: 600; box-shadow: 0 2px 8px rgba(220,53,69,0.3);">
+                                        <i class="fa fa-times-circle mr-1"></i>Kosong
+                                    </div>
+                                {{ end }}
+                            </div>
+                            <div class="product-content" style="padding: 20px;">
+                                {{ if gt $product.Stock 0 }}
+                                    <h3 style="margin-bottom: 10px; font-size: 18px; font-weight: 600; line-height: 1.4;">
+                                        <a href="/products/{{ $product.Slug }}" 
+                                           style="color: #333; text-decoration: none; transition: color 0.3s ease;">
+                                            {{ $product.Name }}
+                                        </a>
+                                    </h3>
+                                    <div class="product-price" style="margin-top: 15px;">
+                                        <span style="color: #007bff; font-size: 20px; font-weight: 700;">
+                                            {{ $product.HJ1 }}
+                                        </span>
+                                    </div>
+                                {{ else }}
+                                    <h3 style="margin-bottom: 10px; font-size: 18px; font-weight: 600; line-height: 1.4; color: #6c757d;">
+                                        {{ $product.Name }}
+                                    </h3>
+                                    <div class="out-of-stock" style="margin-top: 15px;">
+                                        <span class="text-danger" style="font-weight: 600; font-size: 16px;">
+                                            <i class="fa fa-exclamation-triangle mr-1"></i>STOK KOSONG
+                                        </span>
+                                    </div>
+                                {{ end }}
+                            </div>
+                        </div>
+                    </div>
+                {{ end }}
+            </div>
+            {{ template "pagination" . }}
+        </div>
+    </div>
+</div>
+</section>
+<script>
+function applySorting(sortValue) {
+    const currentUrl = new URL(window.location.href);
+    currentUrl.searchParams.set('sort', sortValue);
+    window.location.href = currentUrl.toString();
+}
+
+// Product Search Autocomplete
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search-input');
+    const suggestionsDiv = document.getElementById('search-suggestions');
+    const sortInput = document.getElementById('sort-input');
+    let debounceTimeout;
+
+    const searchBtn = document.querySelector('.btn-primary');
+    searchBtn.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-2px)';
+        this.style.boxShadow = '0 6px 20px rgba(0,123,255,0.3)';
+    });
+    searchBtn.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+        this.style.boxShadow = 'none';
+    });
+
+    document.querySelectorAll('.single-product').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+            this.style.boxShadow = '0 15px 35px rgba(0,0,0,0.15)';
+        });
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = '0 5px 20px rgba(0,0,0,0.1)';
+        });
+    });
+
+    searchInput.addEventListener('input', function() {
+        const query = this.value.trim();
+        
+        clearTimeout(debounceTimeout);
+        
+        if (query.length < 2) {
+            suggestionsDiv.style.display = 'none';
+            return;
+        }
+
+        debounceTimeout = setTimeout(() => {
+            searchProducts(query);
+        }, 300);
+    });
+
+    function searchProducts(query) {
+        fetch(`/api/products/search?q=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => {
+                displayProductSuggestions(data);
+            })
+            .catch(error => {
+                console.error('Error fetching product suggestions:', error);
+                suggestionsDiv.style.display = 'none';
+            });
+    }
+
+    function displayProductSuggestions(suggestions) {
+        suggestionsDiv.innerHTML = '';
+        
+        if (suggestions.length === 0) {
+            suggestionsDiv.style.display = 'none';
+            return;
+        }
+
+        suggestions.forEach(product => {
+            const item = document.createElement('a');
+            item.className = 'list-group-item list-group-item-action';
+            item.style.cssText = `
+                cursor: pointer;
+                border: none;
+                padding: 15px 20px;
+                transition: all 0.3s ease;
+                background: white;
+            `;
+            
+            let satuanInfo = '';
+            if (product.satuan1) satuanInfo += `<span class=" badge-secondary mr-1" style="background: ##3778c2; border-radius: 12px; padding: 4px 8px;">${product.satuan1}</span>`;
+            if (product.satuan2) satuanInfo += `<span class=" badge-secondary mr-1" style="background: ##4bac35; border-radius: 12px; padding: 4px 8px;">${product.satuan2}</span>`;
+            if (product.satuan3) satuanInfo += `<span class=" badge-secondary mr-1" style="background: ##f5b935; border-radius: 12px; padding: 4px 8px;">${product.satuan3}</span>`;
+            
+            item.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong style="color: #333; font-size: 16px;">${product.name}</strong><br>
+                       <small class="text-muted">${satuanInfo}</small> 
+                    </div>
+                    <div class="text-right">
+                        <small class="text-success" style="font-weight: 600; font-size: 14px;">Rp ${product.price}</small>
+                    </div>
+                </div>
+            `;
+            
+            item.addEventListener('mouseenter', function() {
+                this.style.background = '#f8f9fa';
+                this.style.borderLeft = '4px solid #007bff';
+            });
+            item.addEventListener('mouseleave', function() {
+                this.style.background = 'white';
+                this.style.borderLeft = 'none';
+            });
+            
+            item.addEventListener('click', function() {
+                searchInput.value = product.name;
+                suggestionsDiv.style.display = 'none';
+                window.location.href = `/products/${product.slug}`;
+            });
+            
+            suggestionsDiv.appendChild(item);
+        });
+        
+        suggestionsDiv.style.display = 'block';
+    }
+
+    document.addEventListener('click', function(e) {
+        if (!searchInput.contains(e.target) && !suggestionsDiv.contains(e.target)) {
+            suggestionsDiv.style.display = 'none';
+        }
+    });
+
+    searchInput.closest('form').addEventListener('submit', function() {
+        suggestionsDiv.style.display = 'none';
+    });
+});
+</script>
+
+{{ end }}

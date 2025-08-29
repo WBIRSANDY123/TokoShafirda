@@ -1,0 +1,22 @@
+package models
+
+type Model struct {
+	Model interface{}
+}
+
+func RegisterModels() []Model {
+	return []Model{
+		{Model: User{}},
+		{Model: Address{}},
+		{Model: Product{}},
+		{Model: ProductImage{}},
+		{Model: Order{}},
+		{Model: OrderItem{}},
+		{Model: OrderCustomer{}},
+		{Model: Payment{}},
+		{Model: Shipment{}},
+		{Model: Cart{}},
+		{Model: CartItem{}},
+		{Model: Role{}},
+	}
+}

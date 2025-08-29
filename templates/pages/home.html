@@ -1,0 +1,213 @@
+{{ define "home" }}
+<!-- Enhanced slider section with subtle dot pattern background -->
+<section class="slider-section pt-5 pb-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); position: relative;">
+    <!-- Increased dot pattern opacity from 0.08 to 0.15 and size from 35px to 45px for better visibility -->
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: radial-gradient(circle, rgba(0,123,255,0.15) 3px, transparent 3px); background-size: 45px 45px; pointer-events: none;"></div>
+    <div class="container" style="position: relative; z-index: 1;">
+        <div class="slider-inner">
+            <div class="row justify-content-center">
+                <div class="col-md-11 col-lg-10">
+                    <div id="carouselExampleIndicators" class="carousel slide carousel-fade" data-ride="carousel" data-interval="5000">
+                        <!-- Modern indicators with better visibility -->
+                        <ol class="carousel-indicators" style="bottom: 20px;">
+                            <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active" style="width: 15px; height: 15px; border-radius: 50%; background-color: rgba(255,255,255,0.8); border: 2px solid #007bff; margin: 0 8px;"></li>
+                            <li data-target="#carouselExampleIndicators" data-slide-to="1" style="width: 15px; height: 15px; border-radius: 50%; background-color: rgba(255,255,255,0.8); border: 2px solid #007bff; margin: 0 8px;"></li>
+                            <li data-target="#carouselExampleIndicators" data-slide-to="2" style="width: 15px; height: 15px; border-radius: 50%; background-color: rgba(255,255,255,0.8); border: 2px solid #007bff; margin: 0 8px;"></li>
+                        </ol>
+                        <!-- Enhanced carousel with modern border and better image presentation -->
+                        <div class="carousel-inner shadow-lg overflow-hidden" style="border-radius: 20px; border: 4px solid rgba(0,123,255,0.15); position: relative;">
+                            <!-- Added overlay gradient for better text readability -->
+                            <div class="carousel-item active position-relative">
+                                <img class="d-block w-100" src="/public/img/slides/slide5.jpg" alt="Slide Pertama" style="height: 500px; object-fit: cover; filter: brightness(0.85);">
+                                <div class="position-absolute w-100 h-100" style="top: 0; left: 0; background: linear-gradient(45deg, rgba(0,123,255,0.1) 0%, rgba(0,0,0,0.2) 100%);"></div>
+                                <div class="carousel-caption d-none d-md-block position-absolute" style="bottom: 50px; left: 50%; transform: translateX(-50%); width: 90%;">
+                                    <div class="bg-white bg-opacity-90 rounded-lg p-4 mx-auto shadow-lg" style="max-width: 600px; backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.2);">
+                                        <h5 class="text-primary font-weight-bold mb-2" style="font-size: 1.8rem; text-shadow: none;">Koleksi Terbaru</h5>
+                                        <p class="text-dark mb-0" style="font-size: 1.2rem; opacity: 0.8;">Temukan produk terbaik untuk kebutuhan Anda</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-item position-relative">
+                                <img class="d-block w-100" src="/public/img/slides/slide6.jpg" alt="Slide Kedua" style="height: 500px; object-fit: cover; filter: brightness(0.85);">
+                                <div class="position-absolute w-100 h-100" style="top: 0; left: 0; background: linear-gradient(45deg, rgba(40,167,69,0.1) 0%, rgba(0,0,0,0.2) 100%);"></div>
+                                <div class="carousel-caption d-none d-md-block position-absolute" style="bottom: 50px; left: 50%; transform: translateX(-50%); width: 90%;">
+                                    <div class="bg-white bg-opacity-90 rounded-lg p-4 mx-auto shadow-lg" style="max-width: 600px; backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.2);">
+                                        <h5 class="text-success font-weight-bold mb-2" style="font-size: 1.8rem; text-shadow: none;">Kualitas Premium</h5>
+                                        <p class="text-dark mb-0" style="font-size: 1.2rem; opacity: 0.8;">Produk berkualitas tinggi dengan harga terjangkau</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-item position-relative">
+                                <img class="d-block w-100" src="/public/img/slides/slide7.jpg" alt="Slide Ketiga" style="height: 500px; object-fit: cover; filter: brightness(0.85);">
+                                <div class="position-absolute w-100 h-100" style="top: 0; left: 0; background: linear-gradient(45deg, rgba(255,193,7,0.1) 0%, rgba(0,0,0,0.2) 100%);"></div>
+                                <div class="carousel-caption d-none d-md-block position-absolute" style="bottom: 50px; left: 50%; transform: translateX(-50%); width: 90%;">
+                                    <div class="bg-white bg-opacity-90 rounded-lg p-4 mx-auto shadow-lg" style="max-width: 600px; backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.2);">
+                                        <h5 class="text-warning font-weight-bold mb-2" style="font-size: 1.8rem; text-shadow: none;">Pengalaman Berbelanja</h5>
+                                        <p class="text-dark mb-0" style="font-size: 1.2rem; opacity: 0.8;">Nikmati pengalaman berbelanja yang menyenangkan</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Modern navigation arrows with better design and positioning -->
+                        <a class="carousel-control-prev position-absolute" href="#carouselExampleIndicators" role="button" data-slide="prev" style="left: -60px; top: 50%; transform: translateY(-50%); width: 50px; height: 50px;">
+                            <div class="bg-white rounded-circle shadow-lg d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#007bff'; this.style.transform='scale(1.1)'" onmouseout="this.style.backgroundColor='white'; this.style.transform='scale(1)'">
+                                <i class="fa fa-chevron-left" style="color: #007bff; font-size: 1.2rem;" onmouseover="this.style.color='white'" onmouseout="this.style.color='#007bff'"></i>
+                            </div>
+                            <span class="sr-only">Sebelumnya</span>
+                        </a>
+                        <a class="carousel-control-next position-absolute" href="#carouselExampleIndicators" role="button" data-slide="next" style="right: -60px; top: 50%; transform: translateY(-50%); width: 50px; height: 50px;">
+                            <div class="bg-white rounded-circle shadow-lg d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#007bff'; this.style.transform='scale(1.1)'" onmouseout="this.style.backgroundColor='white'; this.style.transform='scale(1)'">
+                                <i class="fa fa-chevron-right" style="color: #007bff; font-size: 1.2rem;" onmouseover="this.style.color='white'" onmouseout="this.style.color='#007bff'"></i>
+                            </div>
+                            <span class="sr-only">Selanjutnya</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Enhanced services section with geometric pattern background -->
+<section class="pt-5 pb-5" style="background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); position: relative;">
+    <!-- Added subtle geometric pattern overlay -->
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(45deg, rgba(0,123,255,0.06) 25%, transparent 25%), linear-gradient(-45deg, rgba(0,123,255,0.06) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, rgba(0,123,255,0.06) 75%), linear-gradient(-45deg, transparent 75%, rgba(0,123,255,0.06) 75%); background-size: 50px 50px; background-position: 0 0, 0 25px, 25px -25px, -25px 0px; pointer-events: none;"></div>
+    <div class="container" style="position: relative; z-index: 1;">
+        <!-- Improved section header with better spacing and color -->
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h2 class="font-weight-bold mb-3" style="color: #2c3e50; font-size: 2.5rem;">Mengapa Memilih Kami?</h2>
+                <p class="text-muted lead mb-4" style="font-size: 1.2rem;">Kami memberikan pelayanan terbaik untuk kepuasan pelanggan</p>
+                <div class="mx-auto mb-4" style="width: 80px; height: 4px; background: linear-gradient(90deg, #007bff, #28a745, #ffc107); border-radius: 2px;"></div>
+            </div>
+        </div>
+        
+        <!-- Enhanced cards with better color coordination and hover effects -->
+        <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card border-0 shadow-lg h-100 text-center p-4" style="transition: all 0.3s ease; border-radius: 15px;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 30px rgba(0,0,0,0.1)'">
+                    <div class="card-body">
+                        <div class="iconbox iconmedium rounded-circle text-white mx-auto mb-4 d-flex align-items-center justify-content-center shadow-lg" style="width: 90px; height: 90px; background: linear-gradient(135deg, #007bff, #0056b3);">
+                            <i class="fa fa-truck fa-2x"></i>
+                        </div>
+                        <h5 class="font-weight-bold mb-3" style="color: #2c3e50; font-size: 1.3rem;">Pengiriman Cepat</h5>
+                        <p class="text-muted" style="line-height: 1.6;">
+                            Kami menjamin pengiriman cepat dan aman ke seluruh Indonesia dengan layanan terpercaya.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card border-0 shadow-lg h-100 text-center p-4" style="transition: all 0.3s ease; border-radius: 15px;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 30px rgba(0,0,0,0.1)'">
+                    <div class="card-body">
+                        <div class="iconbox iconmedium rounded-circle text-white mx-auto mb-4 d-flex align-items-center justify-content-center shadow-lg" style="width: 90px; height: 90px; background: linear-gradient(135deg, #28a745, #1e7e34);">
+                            <i class="fa fa-credit-card-alt fa-2x"></i>
+                        </div>
+                        <h5 class="font-weight-bold mb-3" style="color: #2c3e50; font-size: 1.3rem;">Pembayaran Online</h5>
+                        <p class="text-muted" style="line-height: 1.6;">
+                            Berbagai metode pembayaran online yang aman dan mudah untuk kemudahan berbelanja Anda.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card border-0 shadow-lg h-100 text-center p-4" style="transition: all 0.3s ease; border-radius: 15px;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 30px rgba(0,0,0,0.1)'">
+                    <div class="card-body">
+                        <div class="iconbox iconmedium rounded-circle text-white mx-auto mb-4 d-flex align-items-center justify-content-center shadow-lg" style="width: 90px; height: 90px; background: linear-gradient(135deg, #ffc107, #e0a800);">
+                            <i class="fa fa-refresh fa-2x"></i>
+                        </div>
+                        <h5 class="font-weight-bold mb-3" style="color: #2c3e50; font-size: 1.3rem;">Pengembalian Gratis</h5>
+                        <p class="text-muted" style="line-height: 1.6;">
+                            Tidak puas dengan produk? Kami menyediakan layanan pengembalian gratis tanpa ribet.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Enhanced trending products section with hexagon pattern background -->
+<section class="products-grids trending pt-5 pb-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); position: relative;">
+    <!-- Increased pattern opacity from 0.08 to 0.12 and adjusted sizes for better visibility -->
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: radial-gradient(circle at 50% 50%, rgba(40,167,69,0.12) 4px, transparent 4px), radial-gradient(circle at 25% 25%, rgba(255,193,7,0.12) 3px, transparent 3px); background-size: 70px 70px, 50px 50px; pointer-events: none;"></div>
+    <div class="container" style="position: relative; z-index: 1;">
+          <!-- Improved section header styling -->
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h2 class="font-weight-bold mb-3" style="color: #2c3e50; font-size: 2.5rem;">Produk Trending</h2>
+                <p class="text-muted lead mb-4" style="font-size: 1.2rem;">Produk pilihan yang paling diminati pelanggan</p>
+                <div class="mx-auto mb-4" style="width: 80px; height: 4px; background: linear-gradient(90deg, #007bff, #28a745, #ffc107); border-radius: 2px;"></div>
+            </div>
+        </div>
+        <!-- Enhanced product cards with better spacing and hover effects -->
+        <div class="row justify-content-center">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4">
+                <div class="card single-product border-0 shadow-lg h-100" style="transition: all 0.3s ease; border-radius: 15px;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 15px 35px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.1)'">
+                    <div class="product-img position-relative overflow-hidden" style="border-radius: 15px 15px 0 0;">
+                        <a href="/products?query=KAPAL+API" target="_blank">
+                        <img src="/public/img/products/KOPI.jpg" 
+                            class="card-img-top" 
+                            style="height: 280px; object-fit: cover; transition: transform 0.3s ease;" 
+                            onmouseover="this.style.transform='scale(1.05)'" 
+                            onmouseout="this.style.transform='scale(1)'" />
+                        </a>
+                        <div class="position-absolute" style="top: 15px; right: 15px;">
+                            <span class="badge badge-danger shadow-sm" style="font-size: 0.8rem; padding: 8px 12px; border-radius: 20px;">Terlaris</span>
+                        </div>
+                    </div>
+                    <div class="card-body product-content text-center p-4">
+                        <h5 class="card-title mb-3"><a href="/products?query=KAPAL+API" class="text-decoration-none" style="color: #2c3e50; font-weight: 600;">Kopi Kapal Api</a></h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4">
+                <div class="card single-product border-0 shadow-lg h-100" style="transition: all 0.3s ease; border-radius: 15px;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 15px 35px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.1)'">
+                    <div class="product-img position-relative overflow-hidden" style="border-radius: 15px 15px 0 0;">
+                        <a href="/products?query=A+MILD" target="_blank">
+                        <img src="/public/img/products/A mild.jpg" class="card-img-top" style="height: 280px; object-fit: cover; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" />
+                        </a>
+                        <div class="position-absolute" style="top: 15px; right: 15px;">
+                            <span class="badge badge-success shadow-sm" style="font-size: 0.8rem; padding: 8px 12px; border-radius: 20px;">Terlaris</span>
+                        </div>
+                    </div>
+                    <div class="card-body product-content text-center p-4">
+                        <h5 class="card-title mb-3"><a href="/products?query=A+MILD" class="text-decoration-none" style="color: #2c3e50; font-weight: 600;">Sampoerna Mild</a></h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4">
+                <div class="card single-product border-0 shadow-lg h-100" style="transition: all 0.3s ease; border-radius: 15px;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 15px 35px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.1)'">
+                    <div class="product-img position-relative overflow-hidden" style="border-radius: 15px 15px 0 0;">
+                        <a href="/products?query=ULTRA+MILK" target="_blank">
+                        <img src="/public/img/products/SUSU.jpg" class="card-img-top" style="height: 280px; object-fit: cover; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" />
+                        </a>
+                        <div class="position-absolute" style="top: 15px; right: 15px;">
+                            <span class="badge badge-warning shadow-sm" style="font-size: 0.8rem; padding: 8px 12px; border-radius: 20px;">Terlaris</span>
+                        </div>
+                    </div>
+                    <div class="card-body product-content text-center p-4">
+                        <h5 class="card-title mb-3"><a href="/products?query=ULTRA+MILK" class="text-decoration-none" style="color: #2c3e50; font-weight: 600;">Ultra Milk</a></h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4">
+                <div class="card single-product border-0 shadow-lg h-100" style="transition: all 0.3s ease; border-radius: 15px;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 15px 35px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.1)'">
+                    <div class="product-img position-relative overflow-hidden" style="border-radius: 15px 15px 0 0;">
+                        <a href="/products?query=MIE+SEDAP" target="_blank">
+                        <img src="/public/img/products/SEDAP.jpg" class="card-img-top" style="height: 280px; object-fit: cover; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" />
+                        </a>
+                        <div class="position-absolute" style="top: 15px; right: 15px;">
+                            <span class="badge badge-info shadow-sm" style="font-size: 0.8rem; padding: 8px 12px; border-radius: 20px;">Terlaris</span>
+                        </div>
+                    </div>
+                    <div class="card-body product-content text-center p-4">
+                        <h5 class="card-title mb-3"><a href="/products?query=MIE+SEDAP" class="text-decoration-none" style="color: #2c3e50; font-weight: 600;">Mie Sedaap Goreng</a></h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{ end }}
