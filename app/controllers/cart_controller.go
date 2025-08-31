@@ -227,7 +227,7 @@ func (server *Server) GetCart(w http.ResponseWriter, r *http.Request) {
 	cartID := GetShoppingCartID(w, r)
 	// Mengambil data keranjang belanja dari database berdasarkan cartID.
 	cart, _ = GetShoppingCart(server.DB, cartID)
-	
+
 	items, _ := GetCartItemsWithImages(server.DB, cartID)
 
 	// Mengirimkan data ke template "cart" dan merender halaman.
@@ -320,7 +320,7 @@ func (server *Server) UpdateCart(w http.ResponseWriter, r *http.Request) {
 	for _, item := range cart.CartItems {
 		// Mengambil kuantitas dari form.
 		qty, _ := strconv.Atoi(r.FormValue(item.ID))
-		
+
 		// Skip jika qty 0 atau negatif
 		if qty <= 0 {
 			continue
@@ -413,7 +413,7 @@ func (server *Server) CalculateShippingBiteship(w http.ResponseWriter, r *http.R
 			http.Error(w, "Latitude and longitude required for instant delivery", http.StatusBadRequest)
 			return
 		}
-		
+
 		// Jika jenis kurir adalah "instant", hitung biaya pengiriman menggunakan metode instant
 		shippingFeeOptions, err = server.CalculateShippingFeeBiteshipInstant(ShippingFeeParams{
 			Origin:      latitude,         // Gunakan latitude dari form
@@ -464,13 +464,13 @@ func (server *Server) CalculateShippingBiteship(w http.ResponseWriter, r *http.R
 			"latitude":  -0.5262810043373423,
 			"longitude": 117.13669626404219,
 		}
-		
+
 		// Untuk instant delivery, gunakan koordinat
 		destinationAreaName := "Lokasi dari Peta"
 		if latitude != "" && longitude != "" {
 			destinationAreaName = fmt.Sprintf("Koordinat: %s, %s", latitude, longitude)
 		}
-		
+
 		responseData["destination"] = map[string]interface{}{
 			"area_name": destinationAreaName,
 			"latitude":  latitude,
@@ -489,11 +489,11 @@ func (server *Server) CalculateShippingBiteship(w http.ResponseWriter, r *http.R
 			"area_name": "Toko Shafirda, Samarinda",
 			"area_id":   default_location,
 		}
-		
+
 		// Konversi city_id ke area_id dan dapatkan nama dari mapping lokal
 		destinationAreaID := convertCityIDToBiteshipAreaID(destination)
 		destinationAreaName := getAreaNameFromID(destinationAreaID)
-		
+
 		responseData["destination"] = map[string]interface{}{
 			"area_name": destinationAreaName,
 			"area_id":   destinationAreaID,
@@ -502,9 +502,9 @@ func (server *Server) CalculateShippingBiteship(w http.ResponseWriter, r *http.R
 	}
 
 	res := Result{
-		Code:    200,         // Kode status sukses
+		Code:    200,          // Kode status sukses
 		Data:    responseData, // Data dengan informasi area
-		Message: "Success",   // Pesan sukses
+		Message: "Success",    // Pesan sukses
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -548,15 +548,15 @@ func (server *Server) ApplyShipping(w http.ResponseWriter, r *http.Request) {
 		// Untuk instant delivery, kita perlu koordinat latitude/longitude
 		latitudeStr := r.FormValue("latitude")
 		longitudeStr := r.FormValue("longitude")
-		
+
 		if latitudeStr == "" || longitudeStr == "" {
 			http.Error(w, "Latitude and longitude required for instant delivery", http.StatusBadRequest)
 			return
 		}
-		
+
 		shippingFeeOptions, err = server.CalculateShippingFeeBiteshipInstant(ShippingFeeParams{
-			Origin:      latitudeStr,      // Gunakan latitude dari form
-			Destination: longitudeStr,     // Gunakan longitude dari form
+			Origin:      latitudeStr,  // Gunakan latitude dari form
+			Destination: longitudeStr, // Gunakan longitude dari form
 			Weight:      cart.TotalWeight,
 			Couriers:    courier,
 		})
@@ -600,13 +600,13 @@ func (server *Server) ApplyShipping(w http.ResponseWriter, r *http.Request) {
 
 	// Struktur respons untuk data pengiriman yang diterapkan.
 	type ApplyShippingResponse struct {
-		TotalOrder  decimal.Decimal            `json:"total_order"`
-		ShippingFee decimal.Decimal            `json:"shipping_fee"`
-		GrandTotal  decimal.Decimal            `json:"grand_total"`
-		TotalWeight decimal.Decimal            `json:"total_weight"`
-		Origin      map[string]interface{}     `json:"origin"`
-		Destination map[string]interface{}     `json:"destination"`
-		CourierInfo map[string]interface{}     `json:"courier_info"`
+		TotalOrder  decimal.Decimal        `json:"total_order"`
+		ShippingFee decimal.Decimal        `json:"shipping_fee"`
+		GrandTotal  decimal.Decimal        `json:"grand_total"`
+		TotalWeight decimal.Decimal        `json:"total_weight"`
+		Origin      map[string]interface{} `json:"origin"`
+		Destination map[string]interface{} `json:"destination"`
+		CourierInfo map[string]interface{} `json:"courier_info"`
 	}
 
 	// Menghitung total biaya termasuk biaya pengiriman.
@@ -618,21 +618,21 @@ func (server *Server) ApplyShipping(w http.ResponseWriter, r *http.Request) {
 
 	// Siapkan informasi area untuk response - harus konsisten dengan CalculateShippingBiteship
 	var originInfo, destinationInfo map[string]interface{}
-	
+
 	if cour_type == "instant" {
 		originInfo = map[string]interface{}{
 			"area_name": "Toko Shafirda, Samarinda",
 			"latitude":  -0.5262810043373423,
 			"longitude": 117.13669626404219,
 		}
-		
+
 		destinationAreaName := "Lokasi dari Peta"
 		lat := r.FormValue("latitude")
 		lng := r.FormValue("longitude")
 		if lat != "" && lng != "" {
 			destinationAreaName = fmt.Sprintf("Koordinat: %s, %s", lat, lng)
 		}
-		
+
 		destinationInfo = map[string]interface{}{
 			"area_name": destinationAreaName,
 			"latitude":  lat,
@@ -649,7 +649,7 @@ func (server *Server) ApplyShipping(w http.ResponseWriter, r *http.Request) {
 		// Regular delivery - gunakan mapping lokal yang sama
 		destinationAreaID := convertCityIDToBiteshipAreaID(destination)
 		destinationAreaName := getAreaNameFromID(destinationAreaID)
-		
+
 		originInfo = map[string]interface{}{
 			"area_name": "Toko Shafirda, Samarinda",
 			"area_id":   default_location,
@@ -688,13 +688,13 @@ func (server *Server) ApplyShipping(w http.ResponseWriter, r *http.Request) {
 
 func GetCartItemsWithImages(db *gorm.DB, cartID string) ([]models.CartItem, error) {
 	var cartItems []models.CartItem
-	
+
 	// Preload Product and ProductImages relationships to ensure images are loaded
 	err := db.Preload("Product.ProductImages").Where("cart_id = ?", cartID).Find(&cartItems).Error
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Debug logging to check if images are loaded
 	for _, item := range cartItems {
 		if len(item.Product.ProductImages) == 0 {
@@ -703,6 +703,6 @@ func GetCartItemsWithImages(db *gorm.DB, cartID string) ([]models.CartItem, erro
 			log.Printf("Success: Product %s has %d images loaded", item.Product.Name, len(item.Product.ProductImages))
 		}
 	}
-	
+
 	return cartItems, nil
 }

@@ -53,7 +53,6 @@ func (server *Server) Checkout(w http.ResponseWriter, r *http.Request) {
 	user := auth.CurrentUser(server.DB, w, r)
 	log.Printf("Checkout started for user: %v", user)
 
-	// Debug form values
 	log.Printf("Form values: courier=%s, shipping_fee=%s, city_id=%s, cour_type=%s",
 		r.FormValue("courier"), r.FormValue("shipping_fee"), r.FormValue("city_id"), r.FormValue("cour_type"))
 
@@ -90,6 +89,7 @@ func (server *Server) Checkout(w http.ResponseWriter, r *http.Request) {
 	}
 	order, err := server.SaveOrder(user, checkoutRequest)
 	if err != nil {
+		log.Printf("Failed to save order: %v", err)
 		flash.SetFlash(w, r, "error", "Proses checkout gagal")
 		http.Redirect(w, r, "/carts", http.StatusSeeOther)
 		return
@@ -114,6 +114,7 @@ func (server *Server) Checkout(w http.ResponseWriter, r *http.Request) {
 	if cour_type == "instant" {
 		latitudeStr := r.FormValue("latitude")
 		longitudeStr := r.FormValue("longitude")
+
 		if latitudeStr == "" || longitudeStr == "" {
 			flash.SetFlash(w, r, "error", "Pilih Latitude Longitude!")
 			http.Redirect(w, r, "/carts", http.StatusSeeOther)
@@ -244,7 +245,7 @@ func (server *Server) ShowOrder(w http.ResponseWriter, r *http.Request) {
 func (server *Server) getSelectedShippingCost(w http.ResponseWriter, r *http.Request) (float64, error) {
 	default_location := os.Getenv("API_BITESHIP_SAMARINDA_LOCATION")
 
-	destination := r.FormValue("city_id") // Gunakan city_id dari user input
+	destination := r.FormValue("city_id")
 	cour_type := r.FormValue("cour_type")
 	courier := r.FormValue("courier")
 	shippingFeeSelected := r.FormValue("shipping_fee")
@@ -255,14 +256,13 @@ func (server *Server) getSelectedShippingCost(w http.ResponseWriter, r *http.Req
 	cartID := GetShoppingCartID(w, r)
 	cart, _ := GetShoppingCart(server.DB, cartID)
 
-	// Handle pickup - no shipping cost
 	if cour_type == "pickup" || courier == "pickup" {
 		log.Printf("Pickup selected - no shipping cost")
 		return 0, nil
 	}
 
 	if destination == "" {
-		// Fallback ke default location jika city_id kosong
+
 		destination = default_location
 		if destination == "" {
 			return 0, errors.New("invalid destination: no city_id provided and no default location configured")
@@ -273,7 +273,7 @@ func (server *Server) getSelectedShippingCost(w http.ResponseWriter, r *http.Req
 	var err error
 
 	if cour_type == "instant" {
-		// Untuk instant delivery, gunakan koordinat latitude/longitude
+
 		latitudeStr := r.FormValue("latitude")
 		longitudeStr := r.FormValue("longitude")
 
@@ -282,22 +282,22 @@ func (server *Server) getSelectedShippingCost(w http.ResponseWriter, r *http.Req
 		}
 
 		shippingFeeOptions, err = server.CalculateShippingFeeBiteshipInstant(ShippingFeeParams{
-			Origin:      latitudeStr,  // Gunakan latitude dari form
-			Destination: longitudeStr, // Gunakan longitude dari form
+			Origin:      latitudeStr,
+			Destination: longitudeStr,
 			Weight:      cart.TotalWeight,
 			Couriers:    courier,
 		})
 		log.Printf("Instant delivery calculation with lat: %s, lng: %s", latitudeStr, longitudeStr)
 	} else if cour_type == "pickup" {
-		// Untuk pickup, tidak ada shipping cost
+
 		return 0, nil
 	} else {
-		// Untuk regular delivery, gunakan area ID yang sudah dikonversi
+
 		log.Printf("Regular delivery calculation for: %s", cour_type)
 		destinationAreaID := convertCityIDToBiteshipAreaID(destination)
 		shippingFeeOptions, err = server.CalculateShippingFeeBiteship(ShippingFeeParams{
-			Origin:      default_location,  // Origin tetap default (toko)
-			Destination: destinationAreaID, // Destination menggunakan area ID yang benar
+			Origin:      default_location,
+			Destination: destinationAreaID,
 			Weight:      cart.TotalWeight,
 			Couriers:    courier,
 		})
@@ -312,13 +312,12 @@ func (server *Server) getSelectedShippingCost(w http.ResponseWriter, r *http.Req
 	var selectedShipping models.Pricing
 	var found bool
 
-	// Mencari opsi shipping yang dipilih dengan lebih akurat
 	for _, shippingOption := range shippingFeeOptions {
 		log.Printf("Comparing: '%s' with '%s'", shippingOption.CourierName, shippingFeeSelected)
 		if shippingOption.CourierName == shippingFeeSelected {
 			selectedShipping = shippingOption
 			found = true
-			break // Gunakan break, bukan continue
+			break
 		}
 	}
 
@@ -337,19 +336,18 @@ func (server *Server) SaveOrder(user *models.User, r *CheckoutRequest) (*models.
 	orderID := uuid.New().String()
 	var paymentURL string
 	var err error
-	// if r.ShippingFee.Courier != "pickup" {
+
 	paymentURL, err = server.createPaymentURL(user, r, orderID)
 	if err != nil {
 		return nil, err
 	}
-	// }
 
 	if len(r.Cart.CartItems) > 0 {
 		for _, cartItem := range r.Cart.CartItems {
 			orderItems = append(orderItems, models.OrderItem{
 				ProductID:       cartItem.ProductID,
 				Qty:             cartItem.Qty,
-				Unit:            cartItem.Unit, // Include unit dari cart item
+				Unit:            cartItem.Unit,
 				BasePrice:       cartItem.BasePrice,
 				BaseTotal:       cartItem.BaseTotal,
 				TaxAmount:       cartItem.TaxAmount,
@@ -377,7 +375,6 @@ func (server *Server) SaveOrder(user *models.User, r *CheckoutRequest) (*models.
 		PostCode:   r.ShippingAddress.PostCode,
 	}
 
-	// Hitung grand total termasuk shipping cost
 	shippingCostDecimal := decimal.NewFromFloat(r.ShippingFee.Fee)
 	grandTotalWithShipping := r.Cart.GrandTotal.Add(shippingCostDecimal)
 
@@ -420,7 +417,6 @@ func (server *Server) createPaymentURL(user *models.User, r *CheckoutRequest, or
 
 	enabledPaymentTypes = append(enabledPaymentTypes, snap.AllSnapPaymentType...)
 
-	// Hitung grand total termasuk shipping cost untuk payment
 	shippingCostDecimal := decimal.NewFromFloat(r.ShippingFee.Fee)
 	grandTotalWithShipping := r.Cart.GrandTotal.Add(shippingCostDecimal)
 

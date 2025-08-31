@@ -22,7 +22,7 @@
 			<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 		</div>
 		{{ end }}
-		
+
 		<div class="row">
 			<div class="col-12 mb-4">
 				<div class="section-title">
@@ -33,11 +33,11 @@
 		{{ if .success }}
 		<div class="alert alert-success">
 			{{ range $i, $msg := .success }}
-			{{ $msg }}<br/>
+			{{ $msg }}<br />
 			{{ end }}
 		</div>
 		{{ end }}
-		
+
 		<!-- Added payment status indicator -->
 		{{ if not .order.IsPaid }}
 		<div id="payment-status-alert" class="alert alert-warning">
@@ -49,7 +49,7 @@
 			</div>
 		</div>
 		{{ end }}
-		
+
 		<div class="row">
 			<div class="col-lg-8">
 				<!-- Details -->
@@ -60,62 +60,62 @@
 								<span class="me-3">Order Code</span>
 								<span class="me-3">#{{ .order.Code }}</span>
 								<!-- Added dynamic status badge -->
-								<span id="order-status-badge" class="rounded-pill {{ if .order.IsPaid }}bg-success{{ else }}bg-warning{{ end }}">
+								<span id="order-status-badge"
+									class="rounded-pill {{ if .order.IsPaid }}bg-success{{ else }}bg-warning{{ end }}">
 									{{ .order.GetStatusLabel }}
 								</span>
 							</div>
 						</div>
 						<table class="table table-borderless">
 							<tbody>
-							{{ range $i, $item := .order.OrderItems }}
-							<tr>
-								<td>
-									<div class="d-flex mb-2">
-										<div class="flex-shrink-0">
-											<!-- Updated to show actual product images like in cart -->
-											{{ if $item.Product.ProductImages }}
+								{{ range $i, $item := .order.OrderItems }}
+								<tr>
+									<td>
+										<div class="d-flex mb-2">
+											<div class="flex-shrink-0">
+												<!-- Updated to show actual product images like in cart -->
+												{{ if $item.Product.ProductImages }}
 												{{ $image := index $item.Product.ProductImages 0 }}
-												<img src="/public/{{ $image.Path }}" class="img-fluid" 
-													style="width: 40px; height: 50px; object-fit: cover; border-radius: 8px;" 
+												<img src="/public/{{ $image.Path }}" class="img-fluid"
+													style="width: 40px; height: 50px; object-fit: cover; border-radius: 8px;"
 													alt="{{ $item.Product.Name }}"
 													onerror="console.log('Image failed to load:', this.src); this.src='https://placehold.jp/40x50.png?text=No+Image'" />
-											{{ else }}
-												<img src="https://placehold.jp/40x50.png?text=No+Image" class="img-fluid" 
-													style="width: 40px; height: 50px; object-fit: cover; border-radius: 8px;" 
-													alt="No image available"
-													title="Debug: Product ID {{ $item.Product.ID }} has no images" />
-											{{ end }}
+												{{ else }}
+												<img src="https://placehold.jp/40x50.png?text=No+Image" class="img-fluid"
+													style="width: 40px; height: 50px; object-fit: cover; border-radius: 8px;"
+													alt="No image available" title="Debug: Product ID {{ $item.Product.ID }} has no images" />
+												{{ end }}
+											</div>
+											<div class="flex-lg-grow-1 ms-3 pl-2">
+												<h6 class="small mb-0"><a href="/products/{{ $item.Product.Slug }}" class="text-reset">{{
+														$item.Product.Name }}</a>
+												</h6>
+												<small class="text-muted">Satuan: <span class=" badge-secondary">{{ $item.Unit }}</span></small>
+											</div>
 										</div>
-										<div class="flex-lg-grow-1 ms-3 pl-2">
-											<h6 class="small mb-0"><a href="/products/{{ $item.Product.Slug }}"
-																	  class="text-reset">{{ $item.Product.Name }}</a>
-											</h6>
-											<small class="text-muted">Satuan: <span class=" badge-secondary">{{ $item.Unit }}</span></small>
-										</div>
-									</div>
-								</td>
-								<td>{{ $item.Qty }}</td>
-								<td class="text-end">{{ $item.SubTotal }}</td>
-							</tr>
-							{{ end }}
+									</td>
+									<td>{{ $item.Qty }}</td>
+									<td class="text-end">{{ $item.SubTotal }}</td>
+								</tr>
+								{{ end }}
 							</tbody>
 							<tfoot>
-							<tr>
-								<td colspan="2">Subtotal</td>
-								<td class="text-end">{{ .order.BaseTotalPrice }}</td>
-							</tr>
-							<tr>
-								<td colspan="2">Shipping</td>
-								<td class="text-end">{{ .order.ShippingCost }}</td>
-							</tr>
-							<tr>
-								<td colspan="2">Discount ({{ .order.DiscountPercent }}%)</td>
-								<td class="text-danger text-end">-{{ .order.DiscountAmount }}</td>
-							</tr>
-							<tr class="fw-bold">
-								<td colspan="2">TOTAL</td>
-								<td class="text-end">{{ .order.GrandTotal }}</td>
-							</tr>
+								<tr>
+									<td colspan="2">Subtotal</td>
+									<td class="text-end">{{ .order.BaseTotalPrice }}</td>
+								</tr>
+								<tr>
+									<td colspan="2">Shipping</td>
+									<td class="text-end">{{ .order.ShippingCost }}</td>
+								</tr>
+								<tr>
+									<td colspan="2">Discount ({{ .order.DiscountPercent }}%)</td>
+									<td class="text-danger text-end">-{{ .order.DiscountAmount }}</td>
+								</tr>
+								<tr class="fw-bold">
+									<td colspan="2">TOTAL</td>
+									<td class="text-end">{{ .order.GrandTotal }}</td>
+								</tr>
 							</tfoot>
 						</table>
 					</div>
@@ -155,10 +155,9 @@
 						<div class="mt-3">
 							<h3 class="h6">Order QR Code</h3>
 							<div class="text-center p-3 bg-white rounded">
-								<img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=http://tokoshafirda.web.id:9000/orders/{{ .order.ID }}" 
-									 alt="Order QR Code" 
-									 class="img-fluid border rounded" 
-									 style="max-width: 120px;">
+								<img
+									src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://tokoshafirda.web.id/orders/{{ .order.ID }}"
+									alt="Order QR Code" class="img-fluid border rounded" style="max-width: 120px;">
 								<p class="text-muted mt-2 mb-0">Scan untuk akses order</p>
 							</div>
 						</div>
@@ -197,72 +196,72 @@
 
 <!-- Added JavaScript for payment status polling -->
 <script>
-let paymentCheckInterval;
-let isOrderPaid = {{ .order.IsPaid }};
+	let paymentCheckInterval;
+	let isOrderPaid = {{ .order.IsPaid }};
 
-function checkPaymentStatus() {
-	const spinner = document.getElementById('check-status-spinner');
-	const statusAlert = document.getElementById('payment-status-alert');
-	
-	if (spinner) spinner.classList.remove('d-none');
-	
-	fetch('/api/orders/{{ .order.ID }}/check-payment')
-		.then(response => response.json())
-		.then(data => {
-			console.log('Payment status check result:', data);
-			
-			if (data.status === 'paid') {
-				// Payment confirmed, reload page to show updated status
-				window.location.reload();
-			} else {
-				// Update status message
-				if (statusAlert) {
-					statusAlert.innerHTML = `
+	function checkPaymentStatus() {
+		const spinner = document.getElementById('check-status-spinner');
+		const statusAlert = document.getElementById('payment-status-alert');
+
+		if (spinner) spinner.classList.remove('d-none');
+
+		fetch('/api/orders/{{ .order.ID }}/check-payment')
+			.then(response => response.json())
+			.then(data => {
+				console.log('Payment status check result:', data);
+
+				if (data.status === 'paid') {
+					// Payment confirmed, reload page to show updated status
+					window.location.reload();
+				} else {
+					// Update status message
+					if (statusAlert) {
+						statusAlert.innerHTML = `
 						<div class="d-flex align-items-center">
 							<div class="spinner-border spinner-border-sm me-2" role="status"></div>
 							<span>Status: ${data.message || 'Pembayaran masih pending'}</span>
 						</div>
 					`;
+					}
 				}
-			}
-		})
-		.catch(error => {
-			console.error('Error checking payment status:', error);
-			if (statusAlert) {
-				statusAlert.innerHTML = `
+			})
+			.catch(error => {
+				console.error('Error checking payment status:', error);
+				if (statusAlert) {
+					statusAlert.innerHTML = `
 					<div class="alert alert-warning">
 						Gagal mengecek status pembayaran. <button class="btn btn-link p-0" onclick="checkPaymentStatus()">Coba lagi</button>
 					</div>
 				`;
-			}
-		})
-		.finally(() => {
-			if (spinner) spinner.classList.add('d-none');
-		});
-}
-
-// Auto-check payment status every 30 seconds if order is not paid
-if (!isOrderPaid) {
-	// Initial check after 5 seconds
-	setTimeout(checkPaymentStatus, 5000);
-	
-	// Then check every 30 seconds
-	paymentCheckInterval = setInterval(checkPaymentStatus, 30000);
-	
-	// Stop checking after 10 minutes
-	setTimeout(() => {
-		if (paymentCheckInterval) {
-			clearInterval(paymentCheckInterval);
-			console.log('Stopped automatic payment status checking');
-		}
-	}, 600000); // 10 minutes
-}
-
-// Check payment status when user returns to the tab
-document.addEventListener('visibilitychange', function() {
-	if (!document.hidden && !isOrderPaid) {
-		setTimeout(checkPaymentStatus, 1000);
+				}
+			})
+			.finally(() => {
+				if (spinner) spinner.classList.add('d-none');
+			});
 	}
-});
+
+	// Auto-check payment status every 30 seconds if order is not paid
+	if (!isOrderPaid) {
+		// Initial check after 5 seconds
+		setTimeout(checkPaymentStatus, 5000);
+
+		// Then check every 30 seconds
+		paymentCheckInterval = setInterval(checkPaymentStatus, 30000);
+
+		// Stop checking after 10 minutes
+		setTimeout(() => {
+			if (paymentCheckInterval) {
+				clearInterval(paymentCheckInterval);
+				console.log('Stopped automatic payment status checking');
+			}
+		}, 600000); // 10 minutes
+	}
+
+	// Check payment status when user returns to the tab
+	document.addEventListener('visibilitychange', function () {
+		if (!document.hidden && !isOrderPaid) {
+			setTimeout(checkPaymentStatus, 1000);
+		}
+	});
 </script>
 {{ end }}
